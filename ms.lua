@@ -22,7 +22,6 @@ local function get_opt(opt, options)
     return nil
 end
 
-
 local plc = function()
     color(colors.white)
     println(" chosen PLC mode")
@@ -65,7 +64,7 @@ else
     mode = get_opt(opts[1], { "plc", "hmi" })
     if mode == nil then
         color(colors.red)
-        println("Unrecognized application.")
+        println("Unrecognized mode.")
         color(colors.white)
         return
     end
