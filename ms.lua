@@ -28,7 +28,7 @@ local plc = function()
     color(colors.lightGray)
     println(" -----------------------------------")
     os.setComputerLabel("plc")
-    os.getComputerLabel()
+
 end
 
 function file_exists(name)
@@ -78,7 +78,4 @@ else
     return false
 end
 
-
-
-print(opts[0])
 
