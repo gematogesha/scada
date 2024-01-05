@@ -122,7 +122,6 @@ local function download()
         error(" Installer download failed.")
     else
         local ms_old = fs.open("ms.lua", "w")
-        ms_old.delete()
         ms_old.write(ms.readAll())
         ms_old.close()
     end
