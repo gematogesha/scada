@@ -1,8 +1,8 @@
 local version = "0.0.1"
 
-local repo = "http://raw.githubusercontent.com/Gematogesha/scada/main/"
+local repo = "http://raw.githubusercontent.com/gematogesha/scada/main/"
 
-local manifest = "install.json"
+local manifest = "manifest.json"
 
 local function println(message) print(tostring(message)) end
 local function print(message) term.write(tostring(message)) end
@@ -50,12 +50,29 @@ local function download()
         error(" Manifest download failed.")
     else
         local_ok, local_manifest = pcall(function () return textutils.unserializeJSON(fileManifest.readAll()) end)
+        fs.delete("local_manifest.json")
+        _local_manifest = fs.open("local_manifest.json", "w")
+        _local_manifest.write(textutils.serializeJSON(local_manifest))
+        _local_manifest.close()
 
         color(colors.blue)
-        println(" Start downloading...")
+        if mode == "install" then 
+            println(" Start downloading...")
+        else
+            println(" Start updating...")
+        end
         println(" ")
         color(colors.lightGray)
     
+        if mode == "install" then 
+            print(" downloading ")
+        else
+            print(" updating ")
+        end
+
+        color(colors.blue)
+        println(app)
+
         for _, file in pairs(local_manifest.files[app]) do 
             color(colors.lightGray)
             local dl, err = http.get(repo .. file)
@@ -65,18 +82,48 @@ local function download()
                 error(" Installer download failed.")
             else
                 color(colors.lightGray)
-                println(" Downloading " .. file:match("[^/]*.lua$"))
+                println(" GET " .. file)
+                local local_file = fs.open(file, "w")
+                local_file.write(dl.readAll())
+                local_file.close()
+            end
+        end
+        println(" ")
+
+        if mode == "install" then 
+            print(" downloading ")
+        else
+            print(" updating ")
+        end
+
+        color(colors.blue)
+        println("graphics")
+
+        for _, file in pairs(local_manifest.files["graphics"]) do 
+            color(colors.lightGray)
+            local dl, err = http.get(repo .. file)
+    
+            if dl == nil then
+                error(" HTTP Error " .. err)
+                error(" Installer download failed.")
+            else
+                color(colors.lightGray)
+                println(" GET " .. file)
+                local local_file = fs.open(file, "w")
+                local_file.write(dl.readAll())
+                local_file.close()
             end
         end
     end
 end
 
 local startInstall = function()
+    fs.delete(app)
     color(colors.white)
     println(" Chosen: " .. string.upper( app ) .. " " .. mode )
     color(colors.lightGray)
     println(" -----------------------------------")
-    os.setComputerLabel(mode)
+    os.setComputerLabel(app)
     download()
     println(" ")
     color(colors.green)
@@ -95,28 +142,48 @@ local startUninstall = function()
         color(colors.red)
         println(" Canceled")
     end
-
 end
 
-local checkStart = function()
+local startCheck = function()
     local fileManifest, err = http.get(repo .. manifest)
+    local _fileManifest = fs.open("local_manifest.json", "r")
 
     if fileManifest == nil then
         error(" HTTP Error " .. err)
         error(" Manifest download failed.")
     else
         local_ok, local_manifest = pcall(function () return textutils.unserializeJSON(fileManifest.readAll()) end)
-    
-        for _, ver in pairs(local_manifest.versions) do 
-            color(colors.lightGray)
-            println(ver)
+        _local_ok, _local_manifest = pcall(function () return textutils.unserializeJSON(_fileManifest.readAll()) end)
+        if not _local_ok then 
+            error(" Failed to load local manifest") 
+        else
+            color(colors.white)
+            println(" Name     || Local || Current")
+            println(" ")
+            for key, ver in pairs(local_manifest.versions) do 
+                local _ver = _local_manifest.versions[key]
+                color(colors.lightGray)
+                print(" ")
+                print(key)
+                print(string.rep(" ", 8 - #key) .. " || ")
+                if ver == _ver then
+                    color(colors.green)
+                else 
+                    color(colors.red)
+                end
+                print(_ver)
+                color(colors.lightGray)
+                print(" || ")
+                println(ver)
+            end
         end
+    
+
     end
 end
 
-
+println(" ")
 color(colors.lightGray)
-println(" -----------------------------------")
 color(colors.white)
 println(" SCADA Minecfaft Mekanism " .. version)
 color(colors.lightGray)
@@ -124,14 +191,12 @@ println(" -----------------------------------")
 
 if #opts == 0 or opts[1] == "help" then
     color(colors.white)
-    println(" select the computer operating mode")
-    color(colors.lightGray)
-    println(" -----------------------------------")
-    color(colors.white)
     println(" use: ms <mode> <app>")
     color(colors.lightGray)
     println(" ")
+    color(colors.white)
     println(" <mode>")
+    color(colors.lightGray)
     println(" install     - fresh install")
     println(" check       - check latest versions available")
     println(" update      - update files")
@@ -140,7 +205,9 @@ if #opts == 0 or opts[1] == "help" then
     color(colors.lightGray)
     println(" uninstall   - delete files")
     println(" ")
+    color(colors.white)
     println(" <app>")
+    color(colors.lightGray)
     println(" plc         - PLC firmware")
     println(" hmi         - HMI firmware")
     return
@@ -152,7 +219,7 @@ else
     end
 
     app = get_opt(opts[2], { "plc", "hmi" })
-    if app == nil and mode ~= "update" then
+    if app == nil and mode ~= "check" then
         error(" Unrecognized application.")
         return
     end
@@ -160,7 +227,7 @@ end
 
 if mode == "install" and (fs.isDir("plc") or fs.isDir("hmi")) then
     error(" There is already an active mode")
-elseif mode == "install" and not fs.isDir("plc") and not fs.isDir("hmi") then
+elseif (mode == "install" and not fs.isDir("plc") and not fs.isDir("hmi")) or mode == "update" then
     startInstall()
 end
 
@@ -170,13 +237,7 @@ elseif mode == "uninstall" and not fs.isDir(app) then
     error(" Folder does not exist")
 end
 
-if mode == "update" and app ~= nil then
-    startUpdate()
-elseif mode == "update" and app == nil then
-    startUpdateMs()
-end
-
-if mode == "check" and (app == nil or app ~= nil) then
-    checkStart()
+if mode == "check" and app == nil then
+    startCheck()
 end
 
