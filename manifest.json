@@ -12,7 +12,7 @@
             "hmi/startup.lua"
         ],
         "graphics": [
-            "graphics/backwall.lua",
+            "graphics/backwall.nfp",
             "graphics/indicator.lua",
             "graphics/button.lua"
         ]
