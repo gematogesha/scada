@@ -1,0 +1,16 @@
+{
+    "files": {
+        "test": "sss",
+        "plc": [
+            "plc/startup.lua"
+        ],
+        "hmi": [
+            "hmi/startup.lua"
+        ],
+        "graphics": [
+            "graphics/element.lua",
+            "graphics/events.lua",
+            "graphics/elements/animations/waiting.lua"
+        ]
+    }
+}
