@@ -1,13 +1,20 @@
 {
-    "plc": [
-        "plc/startup.lua"
-    ],
-    "hmi": [
-        "hmi/startup.lua"
-    ],
-    "graphics": [
-        "graphics/element.lua",
-        "graphics/events.lua",
-        "graphics/waiting.lua"
-    ]
+    "versions": {
+        "ms": "0.0.1",
+        "plc": "0.0.1",
+        "hmi": "0.0.1"
+    },
+    "files": {
+        "plc": [
+            "plc/startup.lua"
+        ],
+        "hmi": [
+            "hmi/startup.lua"
+        ],
+        "graphics": [
+            "graphics/element.lua",
+            "graphics/events.lua",
+            "graphics/waiting.lua"
+        ]
+    }
 }
