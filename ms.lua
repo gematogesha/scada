@@ -115,6 +115,17 @@ local function download()
             end
         end
     end
+    local ms, err = http.get(repo .. "ms.lua")
+
+    if ms == nil then
+        error(" HTTP Error " .. err)
+        error(" Installer download failed.")
+    else
+        local ms_old = fs.open("ms.lua", "w")
+        ms_old.delete()
+        ms_old.write(ms.readAll())
+        ms_old.close()
+    end
 end
 
 local startInstall = function()
@@ -178,18 +189,6 @@ local startCheck = function()
             end
         end
     end
-
-    local ms, err = http.get(repo .. "ms.lua")
-
-    if ms == nil then
-        error(" HTTP Error " .. err)
-        error(" Installer download failed.")
-    else
-        local ms_old = fs.open("ms.lua", "w")
-        ms_old.write(ms.readAll())
-        ms_old.close()
-    end
-
 end
 
 println(" ")
