@@ -1,0 +1,1 @@
+wget https://raw.githubusercontent.com/gematogesha/scada/main/ms.lua
