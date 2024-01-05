@@ -1,4 +1,4 @@
-local version = "0.0.1"
+local version = "1.0.1"
 
 local repo = "http://raw.githubusercontent.com/gematogesha/scada/main/"
 
