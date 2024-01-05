@@ -1,5 +1,3 @@
-local button = require("graphics/button")
-
 local version = "v0.0.1"
 
 local repo = "http://raw.githubusercontent.com/Gematogesha/scada/main/"
