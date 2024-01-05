@@ -5,10 +5,10 @@ println("BOOT> SCANNING FOR APPLICATIONS...")
 
 local exit_code
 
-if fs.exists("reactor-plc/startup.lua") then
+if fs.exists("plc/startup.lua") then
     println("BOOT> EXEC PLC STARTUP")
     exit_code = shell.execute("plc/startup")
-elseif fs.exists("rtu/startup.lua") then
+elseif fs.exists("hmi/startup.lua") then
     println("BOOT> EXEC HMI STARTUP")
     exit_code = shell.execute("hmi/startup")
 else
