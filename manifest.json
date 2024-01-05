@@ -12,9 +12,9 @@
             "hmi/startup.lua"
         ],
         "graphics": [
-            "graphics/element.lua",
-            "graphics/events.lua",
-            "graphics/waiting.lua"
+            "graphics/backwall.lua",
+            "graphics/indicator.lua",
+            "graphics/button.lua"
         ]
     }
 }
