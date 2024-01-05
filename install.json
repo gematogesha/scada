@@ -1,13 +1,13 @@
 {
     "plc": [
-        "startup.lua"
+        "plc/startup.lua"
     ],
     "hmi": [
-        "startup.lua"
+        "hmi/startup.lua"
     ],
     "graphics": [
-        "element.lua",
-        "events.lua",
-        "waiting.lua"
+        "graphics/element.lua",
+        "graphics/events.lua",
+        "graphics/waiting.lua"
     ]
 }
