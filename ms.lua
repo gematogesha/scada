@@ -168,14 +168,14 @@ local startCheck = function()
             error(" Failed to load local manifest") 
         else
             color(colors.white)
-            println(" Name     || Local || Current")
+            println(" Name     | Local | Current")
             println(" ")
             for key, ver in pairs(local_manifest.versions) do 
                 local _ver = _local_manifest.versions[key]
                 color(colors.lightGray)
                 print(" ")
                 print(key)
-                print(string.rep(" ", 8 - #key) .. " || ")
+                print(string.rep(" ", 8 - #key) .. " | ")
                 if ver == _ver then
                     color(colors.green)
                 else 
@@ -183,7 +183,7 @@ local startCheck = function()
                 end
                 print(_ver)
                 color(colors.lightGray)
-                print(" || ")
+                print(" | ")
                 println(ver)
             end
         end
