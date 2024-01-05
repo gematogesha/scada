@@ -2,15 +2,15 @@
     "files": {
         "test": "sss",
         "plc": [
-            "plc/startup.lua"
+            "startup.lua"
         ],
         "hmi": [
-            "hmi/startup.lua"
+            "startup.lua"
         ],
         "graphics": [
-            "graphics/element.lua",
-            "graphics/events.lua",
-            "graphics/elements/animations/waiting.lua"
+            "element.lua",
+            "events.lua",
+            "waiting.lua"
         ]
     }
 }

@@ -33,15 +33,19 @@ local function error(text)
 end
 
 local function download(mode)
-    local file = fs.open(installJson, "r")
-    local_ok, local_manifest = pcall(function () return textutils.unserializeJSON(file.readAll()) end)
+    local fileInstall = fs.open(installJson, "r")
+    local_ok, local_manifest = pcall(function () return textutils.unserializeJSON(fileInstall.readAll()) end)
     println(local_manifest.files.test)
 
     color(colors.blue)
     println(" Start downloading...")
     color(colors.lightGray)
 
-    local dl, err = http.get(repo .. "ccmsi.lua")
+    for _, file in pairs(local_manifest.files.graphics) do 
+        println(file)
+    end
+
+    local dl, err = http.get(repo .. "/" .. mode .. "/" .. file)
 
     if dl == nil then
         error("HTTP Error " .. err)
